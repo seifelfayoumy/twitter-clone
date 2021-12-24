@@ -40,6 +40,15 @@ const userSchema = mongoose.Schema({
             }
         }
     },
+    tweets:[
+        {
+            tweet:{
+                type: mongoose.Types.ObjectId,
+                ref: 'Tweet'
+            }
+          
+        }
+    ],
     tokens:[{
         token:{
             type: String,
@@ -85,11 +94,7 @@ userSchema.pre('save', async function(next) {
     next()
 })
 
-userSchema.virtual('tweets',{
-    ref: 'Tweet',
-    localField: '-id',
-    foreignField: 'writer'
-})
+
 
 const User = mongoose.model('User', userSchema)
 

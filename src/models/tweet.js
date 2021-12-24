@@ -7,7 +7,7 @@ const TweetSchema = mongoose.Schema({
         trim: true
     },
     writer:{
-        type: mongoose.Schema.Types.ObjectId,
+        type: mongoose.Types.ObjectId,
         required: true,
         ref: 'User',
     },
