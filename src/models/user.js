@@ -28,7 +28,16 @@ const userSchema = mongoose.Schema({
         trim: true
 
     },
-    followers:[this],
+    followers:{
+        count:{
+            type: Number,
+            default: 0
+        },
+        followedBy:[{
+            type: mongoose.Types.ObjectId,
+            ref: 'User',
+        }]
+    },
     password:{
         type: String,
         required: true,
@@ -40,15 +49,6 @@ const userSchema = mongoose.Schema({
             }
         }
     },
-    tweets:[
-        {
-            tweet:{
-                type: mongoose.Types.ObjectId,
-                ref: 'Tweet'
-            }
-          
-        }
-    ],
     tokens:[{
         token:{
             type: String,
