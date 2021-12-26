@@ -91,20 +91,17 @@ router.post('/tweets/:id/unlike',auth,async(req,res)=>{
 })
 
 //delete tweet
-//STILL WORKING ON IT (CAN'T DELETE TWEET)
 router.delete('/tweets/:id',auth,async(req,res)=>{
     try{
         const tweet = await Tweet.findById(req.params.id)
         const userID = mongoose.Types.ObjectId(req.user._id)
-        if(tweet.writer.equals(userID)){
-            Tweet.deleteOne({_id: tweet._id},(e)=>{
-                if(e){
-                    res.status(400).send(e)
-                }
-                
-            })
+        if(tweet && tweet.writer.equals(userID)){
+            await Tweet.deleteOne({_id: tweet._id})
+            res.status(200).send(tweet)
+        }else{
+            res.status(404).send('tweet not found')
         }
-        res.status(200).send(tweet)
+        
     }catch(e){
         res.status(400).send(e)
     }
