@@ -10,7 +10,8 @@ router.use(cookieParser())
 //Sign Up
 router.post('/users', async (req,res)=>{
     const user = new User(req.body)
-
+    
+    
     try{
         await user.save()
         const token = await user.generateAuthToken()
@@ -132,6 +133,21 @@ router.get('/users/:id/followers',async(req,res)=>{
         res.status(200).send(user.followers)
     }catch(e){
         res.status(400).send()
+    }
+})
+
+//get my profile
+router.get('/users/me',auth, async(req,res)=>{
+    try{
+        const user = {
+            name: req.user.name,
+            followerCount: req.user.followers.count,
+            followedBy: req.user.followers.followedBy
+        }
+        res.status(200).send(user)
+    }
+    catch(e){
+        res.status(400).send(e)
     }
 })
 

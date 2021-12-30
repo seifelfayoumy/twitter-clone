@@ -107,6 +107,11 @@ router.delete('/tweets/:id',auth,async(req,res)=>{
     }
 })
 
+//get tweets for timeline
+router.get('/tweets/timeline',auth,async (req,res)=>{
+    
+})
+
 
 
 module.exports = router

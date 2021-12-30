@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Twitter clone</title>
+    </head>
+    <body>
+        <h2>Twitter Clone</h2>
+        <hr/>
+        {{>homeheader}}
+        <hr/>
+
+         <script id="profile" type="text/html">
+            
+                <p>
+                    <span class="name">{{name}}</span>
+                    <span class="followers">{{followers}}</span>
+                    <span class="following">{{following}}</span>
+                </p>
+                <p>followers</p>
+            
+
+        </script>
+
+        <script src="https://cdn.jsdelivr.net/npm/handlebars@latest/dist/handlebars.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/mustache.js/3.0.1/mustache.min.js"></script>
+        <script src="/js/profile.js"></script>
+    </body>
+</html>
