@@ -64,10 +64,10 @@ router.get('/users/me/followers',auth,async(req,res)=>{
 })
 
 //follow someone
-router.post('/users/follow/:id',auth, async(req,res)=>{
+router.post('/users/follow/:username',auth, async(req,res)=>{
 
     try{
-        const user = await User.findById(req.params.id)
+        const user = await User.findOne({username: req.params.username})
         if(user){
             const followerID = mongoose.Types.ObjectId(req.user._id)
             
@@ -91,10 +91,10 @@ router.post('/users/follow/:id',auth, async(req,res)=>{
 })
 
 //unfollow someone
-router.post('/users/unfollow/:id',auth,async(req,res)=>{
+router.post('/users/unfollow/:username',auth,async(req,res)=>{
 
     try{
-        const user = await User.findById(req.params.id)
+        const user = await User.findOne({username: req.params.username})
         if(user){
             const followerID = mongoose.Types.ObjectId(req.user._id)
             
@@ -150,6 +150,21 @@ router.get('/users/me',auth, async(req,res)=>{
         res.status(400).send(e)
     }
 })
+
+//get user by username
+router.get('/users/:username' ,async(req,res)=>{
+    try{
+        const user = await User.findOne({username: req.params.username})
+        if(user){
+            res.status(200).send(user)
+        }
+        res.status(404).send()
+    }
+    catch(e){
+        res.status(400).send(e)
+    }
+})
+
 
 
 module.exports = router

@@ -6,23 +6,32 @@
     <body>
         <h2>Twitter Clone</h2>
         <hr/>
-        {{>homeheader}}
+        <header>
+           <p>Profile page</p>
+        </header>
+        
         <hr/>
 
-         <script id="profile" type="text/html">
+        <div>
             
-                <p>
-                    <span class="name">{{name}}</span>
-                    <span class="followers">{{followers}}</span>
-                    <span class="following">{{following}}</span>
-                </p>
-                <p>followers</p>
-            
+            <p>Name: {{name}}</p>
+            <p>username: {{username}}</p>
+            <p>followers: {{followerCount}}</p>
+            {{#if tweets}}
+            <p>Tweets:-</p>
+            <ul>
+            {{!-- 
+            In code below "each" interates over the "polls" property and 
+            "this.name" refers to the property inside the array of objects
+            --}}
+                {{#each tweets}}
+                <li>{{>tweet}}</li>
+                {{/each}}
+            </ul>
+            {{/if}}
+        </div>
+        
 
-        </script>
-
-        <script src="https://cdn.jsdelivr.net/npm/handlebars@latest/dist/handlebars.js"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/mustache.js/3.0.1/mustache.min.js"></script>
-        <script src="/js/profile.js"></script>
+        
     </body>
 </html>

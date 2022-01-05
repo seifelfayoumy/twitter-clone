@@ -1,18 +1,45 @@
 <!DOCTYPE html>
 <html>
     <head>
+        
         <title>Twitter clone</title>
     </head>
     <body>
         <h2>Twitter Clone</h2>
         <hr/>
-        {{>homeheader}}
+        <header>
+           
+            <form id="getProfile">
+                <button  type="submit">my profile</button>
+            </form>
+            <form id="writeTweet">
+                <button  type="submit">Write tweet</button>
+            </form>
+            
+            
+            <button type="submit">search for someone</button>
+            <form id="logout">
+                <button  type="submit">logout</button>
+            </form>
+            
+             
+        </header>
         <hr/>
 
-        <div class="main-content">
+        <div id="profileDiv" style="display: none;">
             <p id="name"></p>
             <p id="followerCount"></p>
+            <div id="followers"></div>
+
+            
         </div>
-    <script src="./js/client.js"></script>
+        <div id="writeTweetDiv" style="display: none;">
+            <form id="writeTweetForm">
+                <input name="tweet" placeholder="write anything!">
+                <button type="submit">Post Tweet!</button>
+            </form>
+            <p id="tweetResult"></p>
+        </div>
+    <script src="./js/client.js" defer></script>
     </body>
 </html>
