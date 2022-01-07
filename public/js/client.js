@@ -1,20 +1,22 @@
 
 
+
 console.log('client-side javascript is loaded!')
 
-const $signupForm = document.querySelector('#signupForm')
-const $loginForm = document.querySelector('#loginForm')
-const $getProfileButton = document.querySelector('#getProfile')
-const $name = document.querySelector('#name')
-const $followerCount = document.querySelector('#followerCount')
-const $followers = document.querySelector('#followers')
-const $writeTweetButton = document.querySelector('#writeTweet')
-const $profileDiv = document.querySelector('#profileDiv')
-const $writeTweetDiv = document.querySelector('#writeTweetDiv')
-const $writeTweetForm = document.querySelector('#writeTweetForm')
-const $tweetResult = document.querySelector('#tweetResult')
-const $logout = document.querySelector('#logout')
-const likeTweetButton = document.querySelector('likeTweet')
+var $signupForm = document.querySelector('#signupForm')
+var $loginForm = document.querySelector('#loginForm')
+var $getProfileButton = document.querySelector('#getProfile')
+var $name = document.querySelector('#name')
+var $followerCount = document.querySelector('#followerCount')
+var $followers = document.querySelector('#followers')
+var $writeTweetButton = document.querySelector('#writeTweet')
+var $profileDiv = document.querySelector('#profileDiv')
+var $writeTweetDiv = document.querySelector('#writeTweetDiv')
+var $writeTweetForm = document.querySelector('#writeTweetForm')
+var $tweetResult = document.querySelector('#tweetResult')
+var $logout = document.querySelector('#logout')
+var $likeTweetButtons = document.querySelectorAll('.likeTweet')
+var $removeLikeTweetButtons = document.querySelectorAll('.removeLikeTweet')
 
 
 if($signupForm){
@@ -92,7 +94,7 @@ if($loginForm){
 
 if($getProfileButton){
     $getProfileButton.addEventListener('submit',(e)=>{
-        console.log('wselt')
+        
         e.preventDefault()
 
         $profileDiv.style.display = "block"
@@ -194,27 +196,68 @@ if($logout){
     })
 }
 
-if(likeTweetButton){
-    console.log('wselt')
-    likeTweetButton.addEventListener('submit',(e)=>{
-        e.preventDefault()
 
-        // fetch('/tweets/' + e.target.elements.tweetID.textContent +'like',{
-        //     method: 'POST',
-        //     headers: {
-        //         'Content-Type': 'application/json',
-        //     },
-        // })
-        // .then(data => {
-        //   console.log('Success:', data)
-          
-        // })
-        // .catch((error) => {
-        //  console.error('Error:', error)
-        //  location.href = '/'
-        
-        // })
-
-        console.log(e.target.elements.tweetID.textContent)
+if($likeTweetButtons){
+    
+    $likeTweetButtons.forEach(button =>{
+        button.addEventListener('submit',(e)=>{
+            e.preventDefault()
+            
+            
+            fetch('/tweets/' + e.target.elements.tweetID.textContent.trim() +'/like',{
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            })
+            .then(response => {
+                if(response.ok){
+                    response.json()
+                }else{
+                    throw new error()
+                }
+            })
+            .then(data => {
+            console.log('Success:', data)
+            window.location.reload()
+            
+            })
+            .catch((error) => {
+            console.error('Error:', error)
+            location.href = '/'
+            })
     })
+})
+}
+
+if($removeLikeTweetButtons){
+    $removeLikeTweetButtons.forEach(button =>{
+        button.addEventListener('submit',(e)=>{
+            e.preventDefault()
+            
+            
+            fetch('/tweets/' + e.target.elements.tweetID.textContent.trim() +'/unlike',{
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            })
+            .then(response => {
+                if(response.ok){
+                    response.json()
+                }else{
+                    throw new error()
+                }
+            })
+            .then(data => {
+            console.log('Success:', data)
+            window.location.reload()
+            
+            })
+            .catch((error) => {
+            console.error('Error:', error)
+            location.href = '/'
+            })
+    })
+})
 }

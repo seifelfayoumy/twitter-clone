@@ -1,8 +1,15 @@
-<p>{{this.text}}    ({{this.createdAt}})</p>
+<p>{{this.text}}    ({{this.createdAt}}) Likes: {{this.likes.count}}</p>
 
-<form id="likeTweet">
-    <p name='tweetID' style="display: none;">{{this._id}}</p>
+<form class="likeTweet">
+    <textarea  name="tweetID" style="display: none;">
+         {{this._id}}
+   </textarea>
    <button  type="submit">like</button>
 </form>
+<form class="removeLikeTweet">
+    <textarea  name="tweetID" style="display: none;">
+         {{this._id}}
+   </textarea>
+   <button  type="submit">remove like</button>
+</form>
 
-<script src="../js/client.js"></script>

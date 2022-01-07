@@ -6,6 +6,9 @@
     <body>
         <h2>Twitter Clone</h2>
         <hr/>
+         <button onclick="location.href='/home'" type="button">
+                home
+        </button>
         <header>
            <p>Profile page</p>
         </header>
@@ -17,6 +20,10 @@
             <p>Name: {{name}}</p>
             <p>username: {{username}}</p>
             <p>followers: {{followerCount}}</p>
+            <form class="followButton">
+
+            <button>follow</button>
+            </form>
             {{#if tweets}}
             <p>Tweets:-</p>
             <ul>
@@ -31,7 +38,8 @@
             {{/if}}
         </div>
         
-
         
+
+        <script src="../js/client.js"></script>
     </body>
 </html>

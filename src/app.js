@@ -90,7 +90,8 @@ app.get('/people/:username',async(req,res)=>{
             name: data.name,
             username: data.username,
             followerCount: data.followers.count,
-            tweets: tweetsData
+            tweets: tweetsData,
+            
         })
     }
 })
