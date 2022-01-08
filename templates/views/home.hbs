@@ -17,7 +17,10 @@
             </form>
             
             
-            <button type="submit">search for someone</button>
+            <form id="searchSomeoneButton">
+                <button  type="submit">search for someone by username</button>
+            </form>
+
             <form id="logout">
                 <button  type="submit">logout</button>
             </form>
@@ -28,17 +31,40 @@
 
         <div id="profileDiv" style="display: none;">
             <p id="name"></p>
+            <p id="username"></p>
             <p id="followerCount"></p>
+            
+            <form id="changePassForm">
+                <button type="submit">change password</button>
+            </form>
+
+            <form id="changeNameForm">
+                <button type="submit">change name</button>
+            </form>
+
+            <form id="changeUsernameForm">
+                <button type="submit">change username</button>
+            </form>
+
             <div id="followers"></div>
 
             
         </div>
+
         <div id="writeTweetDiv" style="display: none;">
             <form id="writeTweetForm">
                 <input name="tweet" placeholder="write anything!">
                 <button type="submit">Post Tweet!</button>
             </form>
             <p id="tweetResult"></p>
+        </div>
+
+         <div id="searchSomeoneDiv" style="display: none;">
+            <form id="searchSomeoneForm">
+                <input name="username" placeholder="type the username..">
+                <button type="submit">search</button>
+            </form>
+            <p id="searchResult"></p>
         </div>
     <script src="./js/client.js" defer></script>
     </body>

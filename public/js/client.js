@@ -7,6 +7,7 @@ var $signupForm = document.querySelector('#signupForm')
 var $loginForm = document.querySelector('#loginForm')
 var $getProfileButton = document.querySelector('#getProfile')
 var $name = document.querySelector('#name')
+var $username = document.querySelector('#username')
 var $followerCount = document.querySelector('#followerCount')
 var $followers = document.querySelector('#followers')
 var $writeTweetButton = document.querySelector('#writeTweet')
@@ -17,6 +18,12 @@ var $tweetResult = document.querySelector('#tweetResult')
 var $logout = document.querySelector('#logout')
 var $likeTweetButtons = document.querySelectorAll('.likeTweet')
 var $removeLikeTweetButtons = document.querySelectorAll('.removeLikeTweet')
+var $followButton = document.querySelector('#followButton')
+var $unfollowButton = document.querySelector('#unfollowButton')
+var $searchSomeoneDiv = document.querySelector('#searchSomeoneDiv')
+var $searchSomeoneForm = document.querySelector('#searchSomeoneForm')
+var $searchResult = document.querySelector('#searchResult')
+var $searchSomeoneButton = document.querySelector('#searchSomeoneButton')
 
 
 if($signupForm){
@@ -99,9 +106,11 @@ if($getProfileButton){
 
         $profileDiv.style.display = "block"
         $writeTweetDiv.style.display = "none"
+        $searchSomeoneDiv.style.display = "none"
 
         $name.textContent = ''
         $followerCount.textContent = ''
+        $username.textContent = ''
 
         fetch('/users/me',{
             method: 'GET',
@@ -113,8 +122,9 @@ if($getProfileButton){
         .then(data => {
             console.log('Success:', data)
             
-            $name.textContent =  'Name : ' + data.name
-            $followerCount.textContent = 'Followers : ' + data.followerCount
+            $name.textContent =  'Name: ' + data.name
+            $followerCount.textContent = 'Followers: ' + data.followers.count
+            $username.textContent = 'Username: ' + data.username
             console.log(data.followedBy)
 
             // var node 
@@ -144,6 +154,7 @@ if($writeTweetButton){
 
         $writeTweetDiv.style.display = "block"
         $profileDiv.style.display = "none"
+        $searchSomeoneDiv.style.display = "none"
     })
 }
 
@@ -171,6 +182,52 @@ if($writeTweetForm){
         .catch((error) => {
           console.error('Error:', error)
           $tweetResult.textContent = 'cant post tweet'
+        })
+    })
+}
+
+if($searchSomeoneButton){
+    $searchSomeoneButton.addEventListener('submit',(e)=>{
+        e.preventDefault()
+
+        $searchResult.textContent = ''
+
+        $searchSomeoneDiv.style.display = "block"
+        $writeTweetDiv.style.display = "none"
+        $profileDiv.style.display = "none"
+    })
+}
+if($searchSomeoneForm){
+    $searchSomeoneForm.addEventListener('submit', (e)=>{
+        e.preventDefault()
+
+        $searchResult.textContent = ''
+
+        const username = e.target.elements.username.value
+
+        fetch('/users/' + username,{
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            
+    
+        })
+        .then(response => {
+            if(response.ok){
+                location.href = '/people/' + username
+            }
+            else{
+                throw new error()
+            }
+        })
+        .then(data => {
+          console.log('Success:', data)
+          
+        })
+        .catch((error) => {
+          console.error('Error:', error)
+          $searchResult.textContent = 'user not found'
         })
     })
 }
@@ -259,5 +316,67 @@ if($removeLikeTweetButtons){
             location.href = '/'
             })
     })
+})
+}
+
+if($followButton){
+        $followButton.addEventListener('submit',(e)=>{
+            e.preventDefault()
+            
+            
+            fetch('/users/follow/' + e.target.elements.userUsername.textContent.trim() ,{
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            })
+            .then(response => {
+                if(response.ok){
+                    response.json()
+                }else{
+                    throw new error()
+                }
+            })
+            .then(data => {
+            console.log('Success:', data)
+            window.location.reload()
+            
+            })
+            .catch((error) => {
+            console.error('Error:', error)
+            location.href = '/home'
+            })
+    
+})
+}
+
+if($unfollowButton){
+    $unfollowButton.addEventListener('submit',(e)=>{
+        e.preventDefault()
+        
+        
+        fetch('/users/unfollow/' + e.target.elements.userUsername.textContent.trim() ,{
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        })
+        .then(response => {
+            if(response.ok){
+                response.json()
+            }else{
+                throw new error()
+            }
+        })
+        .then(data => {
+        console.log('Success:', data)
+        window.location.reload()
+        
+        })
+        .catch((error) => {
+        console.error('Error:', error)
+        location.href = '/'
+        })
+
 })
 }

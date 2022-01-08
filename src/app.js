@@ -48,7 +48,10 @@ app.get('/login',(req,res)=>{
 })
 
 app.get('/home',authFront,(req,res)=>{
-    res.render('home')
+    console.log(req.user.followers.followedBy)
+    res.render('home',{
+        followers: req.user.followers.followedBy
+    })
 })
 
 app.get('/people/:username',async(req,res)=>{
@@ -88,10 +91,11 @@ app.get('/people/:username',async(req,res)=>{
        
         res.render('profile',{
             name: data.name,
+            id: data._id,
             username: data.username,
             followerCount: data.followers.count,
             tweets: tweetsData,
-            
+
         })
     }
 })

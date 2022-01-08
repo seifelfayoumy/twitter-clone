@@ -68,7 +68,7 @@ router.post('/users/follow/:username',auth, async(req,res)=>{
 
     try{
         const user = await User.findOne({username: req.params.username})
-        if(user){
+        if(user && (!user.equals(req.user))){
             const followerID = mongoose.Types.ObjectId(req.user._id)
             
             const newFollowers = user.followers.followedBy.filter((follower)=>{
@@ -139,12 +139,7 @@ router.get('/users/:id/followers',async(req,res)=>{
 //get my profile
 router.get('/users/me',auth, async(req,res)=>{
     try{
-        const user = {
-            name: req.user.name,
-            followerCount: req.user.followers.count,
-            followedBy: req.user.followers.followedBy
-        }
-        res.status(200).send(user)
+        res.status(200).send(req.user)
     }
     catch(e){
         res.status(400).send(e)
