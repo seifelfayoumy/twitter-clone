@@ -160,6 +160,44 @@ router.get('/users/:username' ,async(req,res)=>{
     }
 })
 
+//change my password
+router.patch('/users/me/password',auth,async(req,res)=>{
+    try{
+        const user = req.user
+        user.password = req.body.newPassword
+        await user.save()
+        res.status(200).send(user)
+    }
+    catch(e){
+        res.status(400).send(e)
+    }
+})
+
+//change my name
+router.patch('/users/me/name',auth,async(req,res)=>{
+    try{
+        const user = req.user
+        user.name = req.body.newName
+        await user.save()
+        res.status(200).send(user)
+    }
+    catch(e){
+        res.status(400).send(e)
+    }
+})
+
+//change my username
+router.patch('/users/me/username',auth,async(req,res)=>{
+    try{
+        const user = req.user
+        user.username = req.body.newUsername
+        await user.save()
+        res.status(200).send(user)
+    }
+    catch(e){
+        res.status(400).send(e)
+    }
+})
 
 
 module.exports = router

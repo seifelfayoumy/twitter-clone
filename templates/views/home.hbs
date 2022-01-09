@@ -34,17 +34,38 @@
             <p id="username"></p>
             <p id="followerCount"></p>
             
-            <form id="changePassForm">
+            <form id="changePassButton">
                 <button type="submit">change password</button>
             </form>
+            <div id="changePassDiv" style="display: none;">
+                <form id="changePassForm">
+                    <input name="newPass" placeholder="type new password">
+                    <button type="submit">change password!</button>
+                </form>
+                <p id="changePassResult"></p>
+            </div>
 
-            <form id="changeNameForm">
+            <form id="changeNameButton">
                 <button type="submit">change name</button>
             </form>
+             <div id="changeNameDiv" style="display: none;">
+                <form id="changeNameForm">
+                    <input name="newName" placeholder="type new name">
+                    <button type="submit">change name!</button>
+                </form>
+                <p id="changeNameResult"></p>
+            </div>
 
-            <form id="changeUsernameForm">
+            <form id="changeUsernameButton">
                 <button type="submit">change username</button>
             </form>
+             <div id="changeUsernameDiv" style="display: none;">
+                <form id="changeUsernameForm">
+                    <input name="newUsername" placeholder="type new username">
+                    <button type="submit">change username!</button>
+                </form>
+                <p id="changeUsernameResult"></p>
+            </div>
 
             <div id="followers"></div>
 

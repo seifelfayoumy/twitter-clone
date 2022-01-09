@@ -24,6 +24,18 @@ var $searchSomeoneDiv = document.querySelector('#searchSomeoneDiv')
 var $searchSomeoneForm = document.querySelector('#searchSomeoneForm')
 var $searchResult = document.querySelector('#searchResult')
 var $searchSomeoneButton = document.querySelector('#searchSomeoneButton')
+var $changePassButton = document.querySelector('#changePassButton')
+var $changeNameButton = document.querySelector('#changeNameButton')
+var $changeUsernameButton = document.querySelector('#changeUsernameButton')
+var $changePassDiv = document.querySelector('#changePassDiv')
+var $changeNameDiv = document.querySelector('#changeNameDiv')
+var $changeUsernameDiv = document.querySelector('#changeUsernameDiv')
+var $changePassForm = document.querySelector('#changePassForm')
+var $changeNameForm = document.querySelector('#changeNameForm')
+var $changeUsernameForm = document.querySelector('#changeUsernameForm')
+var $changePassResult = document.querySelector('#changePassResult')
+var $changeNameResult = document.querySelector('#changeNameResult')
+var $changeUsernameResult = document.querySelector('#changeUsernameResult')
 
 
 if($signupForm){
@@ -142,6 +154,139 @@ if($getProfileButton){
         .catch((error) => {
              console.error('Error:', error)
              
+        })
+    })
+}
+
+if($changePassButton){
+    $changePassButton.addEventListener('submit',(e)=>{
+        e.preventDefault()
+
+        $changePassDiv.style.display = "block"
+        $changeNameDiv.style.display = "none"
+        $changeUsernameDiv.style.display = "none"
+    })
+}
+if($changeNameButton){
+    $changeNameButton.addEventListener('submit',(e)=>{
+        e.preventDefault()
+
+        $changePassDiv.style.display = "none"
+        $changeNameDiv.style.display = "block"
+        $changeUsernameDiv.style.display = "none"
+    })
+}
+if($changeUsernameButton){
+    $changeUsernameButton.addEventListener('submit',(e)=>{
+        e.preventDefault()
+
+        $changePassDiv.style.display = "none"
+        $changeNameDiv.style.display = "none"
+        $changeUsernameDiv.style.display = "block"
+    })
+}
+
+if($changePassForm){
+    $changePassForm.addEventListener('submit',(e)=>{
+        e.preventDefault()
+
+        $changePassResult.textContent = ''
+
+        const newPass = e.target.newPass.value
+
+        fetch('/users/me/password',{
+            method: 'PATCH',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({newPassword : newPass})
+    
+        })
+        .then(response => {
+            if(response.ok){
+                response.json()
+            }
+            else{
+                throw new error()
+            }
+        })
+        .then(data => {
+          console.log('Success:', data)
+          $changePassResult.textContent = 'password changed successfully'
+        })
+        .catch((error) => {
+          console.error('Error:', error)
+          $changePassResult.textContent = 'cant change password'
+        })
+    })
+}
+
+if($changeNameForm){
+    $changeNameForm.addEventListener('submit',(e)=>{
+        e.preventDefault()
+
+        $changeNameResult.textContent = ''
+
+        const newName = e.target.newName.value
+
+        fetch('/users/me/name',{
+            method: 'PATCH',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({newName : newName})
+    
+        })
+        .then(response => {
+            if(response.ok){
+                response.json()
+            }
+            else{
+                throw new error()
+            }
+        })
+        .then(data => {
+          console.log('Success:', data)
+          $changeNameResult.textContent = 'name changed successfully'
+        })
+        .catch((error) => {
+          console.error('Error:', error)
+          $changeNameResult.textContent = 'cant change name'
+        })
+    })
+}
+
+if($changeUsernameForm){
+    $changeUsernameForm.addEventListener('submit',(e)=>{
+        e.preventDefault()
+
+        $changeUsernameResult.textContent = ''
+
+        const newUsername = e.target.newUsername.value
+
+        fetch('/users/me/username',{
+            method: 'PATCH',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({newUsername : newUsername})
+    
+        })
+        .then(response => {
+            if(response.ok){
+                response.json()
+            }
+            else{
+                throw new error()
+            }
+        })
+        .then(data => {
+          console.log('Success:', data)
+          $changeUsernameResult.textContent = 'username changed successfully'
+        })
+        .catch((error) => {
+          console.error('Error:', error)
+          $changeUsernameResult.textContent = 'cant change username'
         })
     })
 }
