@@ -45,6 +45,16 @@ const userSchema = mongoose.Schema({
             ref: 'User',
         }]
     },
+    following:{
+        count:{
+            type: Number,
+            default: 0
+        },
+        followed:[{
+            type: mongoose.Types.ObjectId,
+            ref: 'User',
+        }]
+    },
     password:{
         type: String,
         required: true,

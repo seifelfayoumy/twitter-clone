@@ -1,4 +1,4 @@
-//import fetch from 'node-fetch'
+
 
 const path = require('path')
 const express = require('express')
@@ -47,10 +47,13 @@ app.get('/login',(req,res)=>{
     res.render('login')
 })
 
-app.get('/home',authFront,(req,res)=>{
-    console.log(req.user.followers.followedBy)
+app.get('/home',authFront,async(req,res)=>{
+    const followers = req.user.followers.followedBy
+    const following = req.user.following.followed
+    
     res.render('home',{
-        followers: req.user.followers.followedBy
+        followersList: followers,
+        followingList: following
     })
 })
 
@@ -94,7 +97,10 @@ app.get('/people/:username',async(req,res)=>{
             id: data._id,
             username: data.username,
             followerCount: data.followers.count,
+            followingCount: data.following.count,
             tweets: tweetsData,
+            followersList: data.followers.followedBy,
+            followingList: data.following.followed
 
         })
     }

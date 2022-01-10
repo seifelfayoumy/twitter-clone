@@ -90,6 +90,20 @@ router.post('/tweets/:id/unlike',auth,async(req,res)=>{
     }
 })
 
+//get tweets for timeline
+router.get('/tweets/me/timeline',auth,async (req,res)=>{
+
+    try{
+        await req.user.populate('following.followed','tweets')
+        const tweets = req.user.following.followed.tweets
+        console.log(tweets)
+        res.status(200).send()
+    }
+    catch(e){
+        res.status(400).send(e)
+    }
+})
+
 //delete tweet
 router.delete('/tweets/:id',auth,async(req,res)=>{
     try{
@@ -107,10 +121,7 @@ router.delete('/tweets/:id',auth,async(req,res)=>{
     }
 })
 
-//get tweets for timeline
-router.get('/tweets/timeline',auth,async (req,res)=>{
-    
-})
+
 
 
 

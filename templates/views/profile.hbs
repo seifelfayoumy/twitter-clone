@@ -20,6 +20,7 @@
             <p>Name: {{name}}</p>
             <p>username: {{username}}</p>
             <p>followers: {{followerCount}}</p>
+            <p>following: {{followingCount}}</p>
             <form id="followButton">
                 <textarea  name="userUsername" style="display: none;">
                     {{username}}
@@ -32,6 +33,41 @@
                 </textarea>
                 <button  type="submit">unfollow</button>
             </form>
+                                    {{#if followersList}}
+            <p>Followers:-</p>
+            <ul>
+            {{!-- 
+            In code below "each" interates over the "polls" property and 
+            "this.name" refers to the property inside the array of objects
+            --}}
+                {{#each followersList}}
+                <li>
+                    <p>{{this.username}}</p>
+                   <button onclick="location.href='/people/{{this.username}}' " type="button">
+                          visit
+                   </button>
+                </li>
+                {{/each}}
+            </ul>
+            {{/if}}
+
+            {{#if followingList}}
+            <p>Following:-</p>
+            <ul>
+            {{!-- 
+            In code below "each" interates over the "polls" property and 
+            "this.name" refers to the property inside the array of objects
+            --}}
+                {{#each followingList}}
+                <li>
+                    <p>{{this.username}}</p>
+                   <button onclick="location.href='/people/{{this.username}}' " type="button">
+                          visit
+                   </button>
+                </li>
+                {{/each}}
+            </ul>
+            {{/if}}
             {{#if tweets}}
             <p>Tweets:-</p>
             <ul>
@@ -44,6 +80,8 @@
                 {{/each}}
             </ul>
             {{/if}}
+
+
         </div>
         
         

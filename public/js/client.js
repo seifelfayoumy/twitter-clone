@@ -9,6 +9,7 @@ var $getProfileButton = document.querySelector('#getProfile')
 var $name = document.querySelector('#name')
 var $username = document.querySelector('#username')
 var $followerCount = document.querySelector('#followerCount')
+var $followingCount = document.querySelector('#followingCount')
 var $followers = document.querySelector('#followers')
 var $writeTweetButton = document.querySelector('#writeTweet')
 var $profileDiv = document.querySelector('#profileDiv')
@@ -36,6 +37,7 @@ var $changeUsernameForm = document.querySelector('#changeUsernameForm')
 var $changePassResult = document.querySelector('#changePassResult')
 var $changeNameResult = document.querySelector('#changeNameResult')
 var $changeUsernameResult = document.querySelector('#changeUsernameResult')
+
 
 
 if($signupForm){
@@ -122,6 +124,7 @@ if($getProfileButton){
 
         $name.textContent = ''
         $followerCount.textContent = ''
+        $followingCount.textContent = ''
         $username.textContent = ''
 
         fetch('/users/me',{
@@ -136,6 +139,7 @@ if($getProfileButton){
             
             $name.textContent =  'Name: ' + data.name
             $followerCount.textContent = 'Followers: ' + data.followers.count
+            $followingCount.textContent = 'Following: ' + data.following.count
             $username.textContent = 'Username: ' + data.username
             console.log(data.followedBy)
 

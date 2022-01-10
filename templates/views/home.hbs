@@ -33,6 +33,7 @@
             <p id="name"></p>
             <p id="username"></p>
             <p id="followerCount"></p>
+            <p id="followingCount"></p>
             
             <form id="changePassButton">
                 <button type="submit">change password</button>
@@ -67,7 +68,41 @@
                 <p id="changeUsernameResult"></p>
             </div>
 
-            <div id="followers"></div>
+            {{#if followersList}}
+            <p>Followers:-</p>
+            <ul>
+            {{!-- 
+            In code below "each" interates over the "polls" property and 
+            "this.name" refers to the property inside the array of objects
+            --}}
+                {{#each followersList}}
+                <li>
+                    <p>{{this.username}}</p>
+                   <button onclick="location.href='/people/{{this.username}}' " type="button">
+                          visit
+                   </button>
+                </li>
+                {{/each}}
+            </ul>
+            {{/if}}
+
+            {{#if followingList}}
+            <p>Following:-</p>
+            <ul>
+            {{!-- 
+            In code below "each" interates over the "polls" property and 
+            "this.name" refers to the property inside the array of objects
+            --}}
+                {{#each followingList}}
+                <li>
+                    <p>{{this.username}}</p>
+                   <button onclick="location.href='/people/{{this.username}}' " type="button">
+                          visit
+                   </button>
+                </li>
+                {{/each}}
+            </ul>
+            {{/if}}
 
             
         </div>

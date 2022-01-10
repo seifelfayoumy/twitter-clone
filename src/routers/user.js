@@ -57,7 +57,18 @@ router.post('/users/logout',auth, async(req,res)=>{
 //get my followers
 router.get('/users/me/followers',auth,async(req,res)=>{
     try{
+        await req.user.populate('followers.followedBy','username')
         res.status(200).send(req.user.followers)
+    }catch(e){
+        res.status(400).send()
+    }
+})
+
+//get my followings
+router.get('/users/me/following',auth,async(req,res)=>{
+    try{
+        await req.user.populate('following.followed','username')
+        res.status(200).send(req.user.following)
     }catch(e){
         res.status(400).send()
     }
@@ -70,6 +81,7 @@ router.post('/users/follow/:username',auth, async(req,res)=>{
         const user = await User.findOne({username: req.params.username})
         if(user && (!user.equals(req.user))){
             const followerID = mongoose.Types.ObjectId(req.user._id)
+            const followingID = mongoose.Types.ObjectId(user._id)
             
             const newFollowers = user.followers.followedBy.filter((follower)=>{
                 return !follower.equals(followerID)
@@ -77,7 +89,12 @@ router.post('/users/follow/:username',auth, async(req,res)=>{
             if(user.followers.followedBy.length === newFollowers.length){
                 user.followers.followedBy.push(followerID)
                 user.followers.count = user.followers.followedBy.length
+
+                req.user.following.followed.push(followingID)
+                req.user.following.count = req.user.following.followed.length
+
                 await user.save()
+                await req.user.save()
             }
             res.status(200).send(user)
         }else{
@@ -97,6 +114,7 @@ router.post('/users/unfollow/:username',auth,async(req,res)=>{
         const user = await User.findOne({username: req.params.username})
         if(user){
             const followerID = mongoose.Types.ObjectId(req.user._id)
+            const followingID = mongoose.Types.ObjectId(user._id)
             
             const newFollowers = user.followers.followedBy.filter((follower)=>{
                 return !follower.equals(followerID)
@@ -105,6 +123,15 @@ router.post('/users/unfollow/:username',auth,async(req,res)=>{
             user.followers.followedBy = newFollowers
             user.followers.count = user.followers.followedBy.length
             await user.save()
+
+            const newFollowing = req.user.following.followed.filter((followed)=>{
+                return !followed.equals(followingID)
+            })
+
+            req.user.following.followed = newFollowing
+            req.user.following.count = req.user.following.followed.length
+            await req.user.save()
+
             res.status(200).send(user)
         }
         res.status(404).send()
@@ -130,6 +157,18 @@ router.get('/users/:id/tweets',async(req,res)=>{
 router.get('/users/:id/followers',async(req,res)=>{
     try{
         const user = await User.findById(req.params.id)
+        await user.populate('followers.followedBy','username')
+        res.status(200).send(user.followers)
+    }catch(e){
+        res.status(400).send()
+    }
+})
+
+//get followings of someone
+router.get('/users/:id/following',async(req,res)=>{
+    try{
+        const user = await User.findById(req.params.id)
+        await user.populate('following.followed','username')
         res.status(200).send(user.followers)
     }catch(e){
         res.status(400).send()
@@ -139,6 +178,8 @@ router.get('/users/:id/followers',async(req,res)=>{
 //get my profile
 router.get('/users/me',auth, async(req,res)=>{
     try{
+        await req.user.populate('followers.followedBy','username')
+        await req.user.populate('following.followed','username')
         res.status(200).send(req.user)
     }
     catch(e){
@@ -150,6 +191,8 @@ router.get('/users/me',auth, async(req,res)=>{
 router.get('/users/:username' ,async(req,res)=>{
     try{
         const user = await User.findOne({username: req.params.username})
+        await user.populate('followers.followedBy','username')
+        await user.populate('following.followed','username')
         if(user){
             res.status(200).send(user)
         }
