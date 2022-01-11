@@ -3,6 +3,7 @@ const Tweet = require('../models/tweet')
 const router = new express.Router()
 const auth = require('../middleware/auth')
 const mongoose = require('mongoose')
+const moment = require('moment')
 
 //publish tweet
 router.post('/tweets',auth, async(req,res)=>{
@@ -94,10 +95,31 @@ router.post('/tweets/:id/unlike',auth,async(req,res)=>{
 router.get('/tweets/me/timeline',auth,async (req,res)=>{
 
     try{
-        await req.user.populate('following.followed','tweets')
-        const tweets = req.user.following.followed.tweets
+        const following = req.user.following.followed
+        var tweets = []
+
+        for (const user of following) {
+            var userTweets = await Tweet.find({writer: user._id})
+            tweets = tweets.concat(userTweets) 
+        }
+
+        tweets = tweets.sort((x,y)=>{
+            return x.createdAt - y.createdAt
+        })
+
+        
+
+        tweets.forEach((tweet)=>{
+            tweet.createdAt = moment(tweet.createdAt).format('DD MM YYYY hh:mm a')
+        })
+        
+        // for (const tweet of tweets) {
+        //     tweet.createdAt = moment(tweet.createdAt).format('DD MM YYYY hh:mm a')
+        // }
+
         console.log(tweets)
-        res.status(200).send()
+       
+        res.status(200).send(tweets)
     }
     catch(e){
         res.status(400).send(e)

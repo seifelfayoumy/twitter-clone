@@ -82,7 +82,7 @@ app.get('/people/:username',async(req,res)=>{
         var tweetsData = await tweets.json()
 
         tweetsData = tweetsData.sort((x,y)=>{
-            return x.timestamp - y.timestamp
+            return x.createdAt - y.createdAt
         })
 
         tweetsData.forEach((tweet)=>{
