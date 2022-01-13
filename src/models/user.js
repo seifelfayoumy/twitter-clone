@@ -29,7 +29,7 @@ const userSchema = mongoose.Schema({
         trim: true,
         lowercase: true,
     },
-    about:{
+    bio:{
         type: String,
         required: false,
         trim: true

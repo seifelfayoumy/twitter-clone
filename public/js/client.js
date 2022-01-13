@@ -10,6 +10,7 @@ var $name = document.querySelector('#name')
 var $username = document.querySelector('#username')
 var $followerCount = document.querySelector('#followerCount')
 var $followingCount = document.querySelector('#followingCount')
+var $bio = document.querySelector('#bio')
 var $followers = document.querySelector('#followers')
 var $writeTweetButton = document.querySelector('#writeTweet')
 var $profileDiv = document.querySelector('#profileDiv')
@@ -28,15 +29,20 @@ var $searchSomeoneButton = document.querySelector('#searchSomeoneButton')
 var $changePassButton = document.querySelector('#changePassButton')
 var $changeNameButton = document.querySelector('#changeNameButton')
 var $changeUsernameButton = document.querySelector('#changeUsernameButton')
+var $changeBioButton = document.querySelector('#changeBioButton')
 var $changePassDiv = document.querySelector('#changePassDiv')
 var $changeNameDiv = document.querySelector('#changeNameDiv')
 var $changeUsernameDiv = document.querySelector('#changeUsernameDiv')
+var $changeBioDiv = document.querySelector('#changeBioDiv')
 var $changePassForm = document.querySelector('#changePassForm')
 var $changeNameForm = document.querySelector('#changeNameForm')
 var $changeUsernameForm = document.querySelector('#changeUsernameForm')
+var $changeBioForm = document.querySelector('#changeBioForm')
 var $changePassResult = document.querySelector('#changePassResult')
 var $changeNameResult = document.querySelector('#changeNameResult')
 var $changeUsernameResult = document.querySelector('#changeUsernameResult')
+var $changeBioResult = document.querySelector('#changeBioResult')
+var $timelineDiv = document.querySelector('#timeline')
 
 
 
@@ -121,11 +127,18 @@ if($getProfileButton){
         $profileDiv.style.display = "block"
         $writeTweetDiv.style.display = "none"
         $searchSomeoneDiv.style.display = "none"
+        $changePassDiv.style.display = "none"
+        $changeNameDiv.style.display = "none"
+        $changeUsernameDiv.style.display = "none"
+        $changeBioDiv.style.display = "none"
+        $timelineDiv.style.display = "none"
+        
 
         $name.textContent = ''
         $followerCount.textContent = ''
         $followingCount.textContent = ''
         $username.textContent = ''
+        $bio.textContent = ''
 
         fetch('/users/me',{
             method: 'GET',
@@ -141,7 +154,12 @@ if($getProfileButton){
             $followerCount.textContent = 'Followers: ' + data.followers.count
             $followingCount.textContent = 'Following: ' + data.following.count
             $username.textContent = 'Username: ' + data.username
-            console.log(data.followedBy)
+            $bio.textContent = 'Bio: no bio'
+            if(data.bio){
+                $bio.textContent = 'Bio: ' + data.bio
+            }
+            
+            
 
             // var node 
             // var textnode 
@@ -169,6 +187,8 @@ if($changePassButton){
         $changePassDiv.style.display = "block"
         $changeNameDiv.style.display = "none"
         $changeUsernameDiv.style.display = "none"
+        $changeBioDiv.style.display = "none"
+        $timelineDiv.style.display = "none"
     })
 }
 if($changeNameButton){
@@ -178,6 +198,8 @@ if($changeNameButton){
         $changePassDiv.style.display = "none"
         $changeNameDiv.style.display = "block"
         $changeUsernameDiv.style.display = "none"
+        $changeBioDiv.style.display = "none"
+        $timelineDiv.style.display = "none"
     })
 }
 if($changeUsernameButton){
@@ -187,6 +209,19 @@ if($changeUsernameButton){
         $changePassDiv.style.display = "none"
         $changeNameDiv.style.display = "none"
         $changeUsernameDiv.style.display = "block"
+        $changeBioDiv.style.display = "none"
+        $timelineDiv.style.display = "none"
+    })
+}
+if($changeBioButton){
+    $changeBioButton.addEventListener('submit',(e)=>{
+        e.preventDefault()
+
+        $changePassDiv.style.display = "none"
+        $changeNameDiv.style.display = "none"
+        $changeUsernameDiv.style.display = "none"
+        $changeBioDiv.style.display = "block"
+        $timelineDiv.style.display = "none"
     })
 }
 
@@ -294,6 +329,40 @@ if($changeUsernameForm){
         })
     })
 }
+if($changeBioForm){
+    $changeBioForm.addEventListener('submit',(e)=>{
+        e.preventDefault()
+
+        $changeBioResult.textContent = ''
+
+        const newBio = e.target.newBio.value
+
+        fetch('/users/me/Bio',{
+            method: 'PATCH',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({newBio})
+    
+        })
+        .then(response => {
+            if(response.ok){
+                response.json()
+            }
+            else{
+                throw new error()
+            }
+        })
+        .then(data => {
+          console.log('Success:', data)
+          $changeBioResult.textContent = 'bio changed successfully'
+        })
+        .catch((error) => {
+          console.error('Error:', error)
+          $changeBioResult.textContent = 'cant change bio'
+        })
+    })
+}
 
 if($writeTweetButton){
     $writeTweetButton.addEventListener('submit',(e)=>{
@@ -304,6 +373,7 @@ if($writeTweetButton){
         $writeTweetDiv.style.display = "block"
         $profileDiv.style.display = "none"
         $searchSomeoneDiv.style.display = "none"
+        $timelineDiv.style.display = "none"
     })
 }
 
@@ -344,6 +414,7 @@ if($searchSomeoneButton){
         $searchSomeoneDiv.style.display = "block"
         $writeTweetDiv.style.display = "none"
         $profileDiv.style.display = "none"
+        $timelineDiv.style.display = "none"
     })
 }
 if($searchSomeoneForm){

@@ -24,16 +24,35 @@
             <form id="logout">
                 <button  type="submit">logout</button>
             </form>
+            <button onclick="location.href='/home'" type="button">
+                timeline
+            </button>
             
              
         </header>
         <hr/>
+
+        <div id="timeline">
+            {{#if timelineTweets}}
+            <p>Timeline:-</p>
+            <ul>
+            {{!-- 
+            In code below "each" interates over the "polls" property and 
+            "this.name" refers to the property inside the array of objects
+            --}}
+                {{#each timelineTweets}}
+                <li>{{>tweet}}</li>
+                {{/each}}
+            </ul>
+            {{/if}}
+        </div>
 
         <div id="profileDiv" style="display: none;">
             <p id="name"></p>
             <p id="username"></p>
             <p id="followerCount"></p>
             <p id="followingCount"></p>
+            <p id="bio"></p>
             
             <form id="changePassButton">
                 <button type="submit">change password</button>
@@ -66,6 +85,16 @@
                     <button type="submit">change username!</button>
                 </form>
                 <p id="changeUsernameResult"></p>
+            </div>
+            <form id="changeBioButton">
+            <button type="submit">change bio</button>
+            </form>
+             <div id="changeBioDiv" style="display: none;">
+                <form id="changeBioForm">
+                    <input name="newBio" placeholder="type new bio">
+                    <button type="submit">change bio!</button>
+                </form>
+                <p id="changeBioResult"></p>
             </div>
 
             {{#if followersList}}

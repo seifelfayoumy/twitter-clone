@@ -242,5 +242,19 @@ router.patch('/users/me/username',auth,async(req,res)=>{
     }
 })
 
+//change my bio
+router.patch('/users/me/bio',auth,async(req,res)=>{
+    try{
+        const user = req.user
+        user.bio = req.body.newBio
+        await user.save()
+        res.status(200).send(user)
+    }
+    catch(e){
+        res.status(400).send(e)
+    }
+})
+
+
 
 module.exports = router

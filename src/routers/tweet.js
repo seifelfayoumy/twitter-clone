@@ -1,9 +1,13 @@
+'use strict'
+
 const express = require('express')
 const Tweet = require('../models/tweet')
+const User = require('../models/user')
 const router = new express.Router()
 const auth = require('../middleware/auth')
 const mongoose = require('mongoose')
 const moment = require('moment')
+
 
 //publish tweet
 router.post('/tweets',auth, async(req,res)=>{
@@ -93,6 +97,7 @@ router.post('/tweets/:id/unlike',auth,async(req,res)=>{
 
 //get tweets for timeline
 router.get('/tweets/me/timeline',auth,async (req,res)=>{
+    
 
     try{
         const following = req.user.following.followed
@@ -103,22 +108,60 @@ router.get('/tweets/me/timeline',auth,async (req,res)=>{
             tweets = tweets.concat(userTweets) 
         }
 
+        
+
         tweets = tweets.sort((x,y)=>{
-            return x.createdAt - y.createdAt
+            return y.createdAt - x.createdAt
         })
 
-        
+        // tweets.forEach((tweet)=>{
+        //     //console.log(typeof new Object(moment().format()) )
+            
+        //     tweet.createdAt = moment(tweet.createdAt).format('DD/MM/YYYY hh:mm a')
+           
+        //    // console.log(tweet.createdAt)
+            
+        // })
 
-        tweets.forEach((tweet)=>{
-            tweet.createdAt = moment(tweet.createdAt).format('DD MM YYYY hh:mm a')
-        })
-        
-        // for (const tweet of tweets) {
-        //     tweet.createdAt = moment(tweet.createdAt).format('DD MM YYYY hh:mm a')
-        // }
+        // // for (const tweet of tweets) {
+        // //     tweet.createdAt = moment(tweet.createdAt).format('DD MM YYYY hh:mm a')
+        // // }
 
-        console.log(tweets)
+        
        
+        res.status(200).send(tweets)
+    }
+    catch(e){
+        res.status(400).send(e)
+    }
+})
+
+//get tweets for timeline by id
+router.get('/tweets/:id/timeline',async (req,res)=>{
+    
+
+    try{
+        const user = await User.findById(req.params.id)
+        const following = user.following.followed
+        var tweets = []
+
+        for (const user of following) {
+            var userTweets = await Tweet.find({writer: user._id})
+
+           
+            tweets = tweets.concat(userTweets) 
+        }
+
+        
+
+        tweets = tweets.sort((x,y)=>{
+            return y.createdAt - x.createdAt
+        })
+
+        for (const tweet of tweets) {
+            await tweet.populate('writer','username')
+        }
+
         res.status(200).send(tweets)
     }
     catch(e){

@@ -35,8 +35,8 @@ app.use(tweetRouter)
 
 app.use(cookieParser())
 
-app.get('/',(req,res)=>{
-    res.render('index')
+app.get('/',authFront,(req,res)=>{
+    res.redirect('/home')
 })
 
 app.get('/signup',(req,res)=>{
@@ -50,10 +50,28 @@ app.get('/login',(req,res)=>{
 app.get('/home',authFront,async(req,res)=>{
     const followers = req.user.followers.followedBy
     const following = req.user.following.followed
+    const fullUrl = req.protocol + '://' + req.get('host')
+
+    const response = await fetch(fullUrl + '/tweets/' + req.user._id +'/timeline' , {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+    })
+
+    const tweetsData = await response.json()
+
+    if(tweetsData){
+        tweetsData.forEach((tweet)=>{
+            tweet.createdAt = moment(tweet.createdAt).format('DD MM YYYY hh:mm a')
+        })
+    }
+    
     
     res.render('home',{
         followersList: followers,
-        followingList: following
+        followingList: following,
+        timelineTweets: tweetsData
     })
 })
 
@@ -82,7 +100,7 @@ app.get('/people/:username',async(req,res)=>{
         var tweetsData = await tweets.json()
 
         tweetsData = tweetsData.sort((x,y)=>{
-            return x.createdAt - y.createdAt
+            return y.createdAt - x.createdAt
         })
 
         tweetsData.forEach((tweet)=>{
@@ -100,7 +118,8 @@ app.get('/people/:username',async(req,res)=>{
             followingCount: data.following.count,
             tweets: tweetsData,
             followersList: data.followers.followedBy,
-            followingList: data.following.followed
+            followingList: data.following.followed,
+            bio: data.bio
 
         })
     }

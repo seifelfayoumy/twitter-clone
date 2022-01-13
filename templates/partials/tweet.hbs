@@ -1,3 +1,9 @@
+<hr/>
+{{#if this.writer.username}}
+<button onclick="location.href='/people/{{this.writer.username}}' " type="button">
+        {{this.writer.username}}
+</button>
+{{/if}}
 <p>{{this.text}}    ({{this.createdAt}}) Likes: {{this.likes.count}}</p>
 
 <form class="likeTweet">
@@ -12,4 +18,7 @@
    </textarea>
    <button  type="submit">remove like</button>
 </form>
+
+
+
 
