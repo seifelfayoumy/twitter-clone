@@ -7,6 +7,7 @@ const mongoose = require('mongoose')
 const cookieParser = require('cookie-parser')
 
 router.use(cookieParser())
+
 //Sign Up
 router.post('/users', async (req,res)=>{
     const user = new User(req.body)
@@ -20,6 +21,7 @@ router.post('/users', async (req,res)=>{
         })
         res.status(201).send({user,token})
     }catch (e){
+        
         res.status(400).send(e)
     }
 })

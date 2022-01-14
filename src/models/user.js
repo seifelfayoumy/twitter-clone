@@ -6,13 +6,13 @@ const bcrypt = require('bcryptjs')
 const userSchema = mongoose.Schema({
     name:{
         type: String,
-        required: true,
+        required: [true, "name is required"],
         trim: true
     },
     email:{
         type: String,
         unique: true,
-        required: true,
+        required: [true, "email is required"],
         trim: true,
         lowercase: true,
         validate(value){
@@ -25,7 +25,7 @@ const userSchema = mongoose.Schema({
     username:{
         type: String,
         unique: true,
-        required: true,
+        required: [true, "username is required"],
         trim: true,
         lowercase: true,
     },
@@ -57,8 +57,8 @@ const userSchema = mongoose.Schema({
     },
     password:{
         type: String,
-        required: true,
-        minLength: 7,
+        required: [true, "password is required"],
+        minLength: [7, "password minimum length should be 7"],
         trim: true,
         validate(value){
             if(value.toLowerCase().includes('password')){

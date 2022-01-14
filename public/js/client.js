@@ -44,6 +44,19 @@ var $changeUsernameResult = document.querySelector('#changeUsernameResult')
 var $changeBioResult = document.querySelector('#changeBioResult')
 var $timelineDiv = document.querySelector('#timeline')
 
+const errorFormatter = (e)=>{
+
+    var errors = {}
+
+    const allErrors = e.substring(e.indexOf(':')+1).trim()
+    const allErrorsFormat = allErrors.split(',').map(err => err.trim())
+
+    allErrorsFormat.forEach(error =>{
+        const [key , value] = error.split(':').map(err => err.trim())
+        errors[key] = value
+    })
+    return errors
+}
 
 
 if($signupForm){
@@ -69,15 +82,25 @@ if($signupForm){
             body: JSON.stringify(user)
     
         })
-        .then(response => response.json())
+        .then(response => {
+            if(response.ok){
+                return response.json()
+            }
+            else{
+                
+                throw response.json()
+            }
+            
+        })
         .then(data => {
           console.log('Success:', data)
           if(data.token){
             location.href = '/home'
           }
         })
-        .catch((error) => {
-          console.error('Error:', error)
+        .catch(async(error) => {
+            const e = await error
+          console.log(errorFormatter(e.message))
         })
         
         
