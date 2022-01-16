@@ -43,10 +43,13 @@ var $changeNameResult = document.querySelector('#changeNameResult')
 var $changeUsernameResult = document.querySelector('#changeUsernameResult')
 var $changeBioResult = document.querySelector('#changeBioResult')
 var $timelineDiv = document.querySelector('#timeline')
+var $signupResult = document.querySelector('#signupResult')
+var $loginResult = document.querySelector('#loginResult')
 
 const errorFormatter = (e)=>{
 
     var errors = {}
+    var errorsString = ''
 
     const allErrors = e.substring(e.indexOf(':')+1).trim()
     const allErrorsFormat = allErrors.split(',').map(err => err.trim())
@@ -54,8 +57,9 @@ const errorFormatter = (e)=>{
     allErrorsFormat.forEach(error =>{
         const [key , value] = error.split(':').map(err => err.trim())
         errors[key] = value
+        errorsString += value + '  \r\n'
     })
-    return errors
+    return {errors, errorsString}
 }
 
 
@@ -63,6 +67,8 @@ if($signupForm){
     $signupForm.addEventListener('submit',(e)=>{
         e.preventDefault()
     
+        $signupResult.textContent = ''
+
         const name = e.target.elements.name.value
         const username = e.target.elements.username.value
         const email = e.target.elements.email.value
@@ -99,8 +105,10 @@ if($signupForm){
           }
         })
         .catch(async(error) => {
-            const e = await error
-          console.log(errorFormatter(e.message))
+          const e = await error
+          
+          $signupResult.setAttribute('style', 'white-space: pre;')
+          $signupResult.textContent = errorFormatter(e.message).errorsString
         })
         
         
@@ -111,6 +119,8 @@ if($loginForm){
     $loginForm.addEventListener('submit',(e)=>{
         e.preventDefault()
         
+        $loginResult.textContent = ''
+
         const email = e.target.elements.email.value
         const password = e.target.elements.password.value
     
@@ -127,7 +137,16 @@ if($loginForm){
             body: JSON.stringify(user)
     
         })
-        .then(response => response.json())
+        .then(response => {
+            if(response.ok){
+                return response.json()
+            }
+            else{
+                
+                throw new error()
+            }
+            
+        })
         .then(data => {
           console.log('Success:', data)
           if(data.token){
@@ -135,7 +154,8 @@ if($loginForm){
           }
         })
         .catch((error) => {
-          console.error('Error:', error)
+            
+            $loginResult.textContent = 'invalid email or password'
         })
         
         
@@ -181,17 +201,6 @@ if($getProfileButton){
             if(data.bio){
                 $bio.textContent = 'Bio: ' + data.bio
             }
-            
-            
-
-            // var node 
-            // var textnode 
-            // data.followedBy.array.forEach(element => {
-            //     node = document.createElement("LI");
-            //     textnode = document.createTextNode(element);
-            //     node.appendChild(textnode);                              // Append the text to <li>
-            //     $followers.appendChild(node);
-            // });
 
             
              

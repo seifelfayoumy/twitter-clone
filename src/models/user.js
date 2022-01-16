@@ -3,6 +3,7 @@ const validator = require('validator')
 const jwt = require('jsonwebtoken')
 const bcrypt = require('bcryptjs')
 
+
 const userSchema = mongoose.Schema({
     name:{
         type: String,
@@ -24,7 +25,7 @@ const userSchema = mongoose.Schema({
     },
     username:{
         type: String,
-        unique: true,
+        unique: true, 
         required: [true, "username is required"],
         trim: true,
         lowercase: true,
@@ -74,6 +75,8 @@ const userSchema = mongoose.Schema({
     }]
 })
 
+
+
 userSchema.statics.findByCredentials = async(email,password)=>{
     const user = await User.findOne({email})
 
@@ -113,6 +116,20 @@ userSchema.pre('save', async function(next) {
     next()
 })
 
+userSchema.post('save', function(error, doc, next) {
+    if (error.code === 11000) {
+      
+      
+      if(error.keyValue.email){
+        next({message:'User validation failed: email: email already exists'})
+      }else{
+        next({message:'User validation failed: username: username already exists'})
+      }
+      
+    } else {
+      next();
+    }
+  })
 
 
 const User = mongoose.model('User', userSchema)
