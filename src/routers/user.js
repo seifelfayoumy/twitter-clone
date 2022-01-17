@@ -5,6 +5,8 @@ const auth = require('../middleware/auth')
 const Tweet = require('../models/tweet')
 const mongoose = require('mongoose')
 const cookieParser = require('cookie-parser')
+const multer = require('multer')
+const sharp = require('sharp')
 
 router.use(cookieParser())
 
@@ -256,6 +258,60 @@ router.patch('/users/me/bio',auth,async(req,res)=>{
         res.status(400).send(e)
     }
 })
+
+const upload = multer({
+    
+    limits:{
+        fileSize: 3000000
+    },
+    fileFilter(req,file,cb){
+        if(!file.originalname.match(/\.(jpg|jpeg|png)$/)){
+            return cb(('please upload image format'),undefined)
+        }
+        cb(undefined,true)
+    }
+})
+
+//upload/change profile picture
+router.post('/users/me/profilepic',auth,upload.single('profilepic'), async(req,res)=>{
+    try{
+        const buffer = await sharp(req.file.buffer).resize({width: 100,height: 100}).png().toBuffer()
+
+        req.user.profilepic = buffer
+        await req.user.save()
+        res.status(200).send('picture uploaded successfully')
+
+    }catch(e){
+        res.status(400).send(e)
+    }
+})
+
+//get profile picture for user by username
+router.get('/users/:username/profilepic',async(req,res)=>{
+    try{
+        const user = await User.findOne({username: req.params.username})
+        if(!user.profilepic || !user){
+            throw new error()
+        }
+
+        res.set('Content-Type','image/jpg')
+        res.status(200).send(user.profilepic)
+    }catch(e){
+        res.status(400).send(e)
+    }
+})
+
+//get my profile pic
+// router.get('/users/me/profilepic',auth,async(req,res)=>{
+//     try{
+
+
+//         res.set('Content-Type','image/jpg')
+//         res.status(200).send(req.user.profilepic)
+//     }catch(e){
+//         res.status(400).send(e)
+//     }
+// })
 
 
 

@@ -67,6 +67,10 @@ const userSchema = mongoose.Schema({
             }
         }
     },
+    profilepic:{
+        type: Buffer,
+        required: false
+    },
     tokens:[{
         token:{
             type: String,

@@ -24,6 +24,7 @@
             <form id="logout">
                 <button  type="submit">logout</button>
             </form>
+            
             <button onclick="location.href='/home'" type="button">
                 timeline
             </button>
@@ -48,6 +49,7 @@
         </div>
 
         <div id="profileDiv" style="display: none;">
+            <img id="profilephoto">
             <p id="name"></p>
             <p id="username"></p>
             <p id="followerCount"></p>
@@ -95,6 +97,16 @@
                     <button type="submit">change bio!</button>
                 </form>
                 <p id="changeBioResult"></p>
+            </div>
+             <form id="uploadProfilepicButton">
+                <button type="submit">upload profile picture</button>
+            </form>
+            <div id="uploadProfilepicDiv" style="display: none;">
+                <form id="uploadProfilepicForm">
+                    <input type="file" name="profilepic"/>
+                    <button type="submit">upload!</button>
+                </form>
+                <p id="uploadProfilepicResult"></p>
             </div>
 
             {{#if followersList}}

@@ -1,6 +1,7 @@
 
 
 
+
 console.log('client-side javascript is loaded!')
 
 var $signupForm = document.querySelector('#signupForm')
@@ -30,21 +31,28 @@ var $changePassButton = document.querySelector('#changePassButton')
 var $changeNameButton = document.querySelector('#changeNameButton')
 var $changeUsernameButton = document.querySelector('#changeUsernameButton')
 var $changeBioButton = document.querySelector('#changeBioButton')
+var $uploadProfilepicButton = document.querySelector('#uploadProfilepicButton')
 var $changePassDiv = document.querySelector('#changePassDiv')
 var $changeNameDiv = document.querySelector('#changeNameDiv')
 var $changeUsernameDiv = document.querySelector('#changeUsernameDiv')
 var $changeBioDiv = document.querySelector('#changeBioDiv')
+var $uploadProfilepicDiv = document.querySelector('#uploadProfilepicDiv')
 var $changePassForm = document.querySelector('#changePassForm')
 var $changeNameForm = document.querySelector('#changeNameForm')
 var $changeUsernameForm = document.querySelector('#changeUsernameForm')
 var $changeBioForm = document.querySelector('#changeBioForm')
+var $uploadProfilepicForm = document.querySelector('#uploadProfilepicForm')
+var $imgInput = document.querySelector('input[type="file"]')
 var $changePassResult = document.querySelector('#changePassResult')
 var $changeNameResult = document.querySelector('#changeNameResult')
 var $changeUsernameResult = document.querySelector('#changeUsernameResult')
 var $changeBioResult = document.querySelector('#changeBioResult')
+var $uploadProfilepicResult = document.querySelector('#uploadProfilepicResult')
 var $timelineDiv = document.querySelector('#timeline')
 var $signupResult = document.querySelector('#signupResult')
 var $loginResult = document.querySelector('#loginResult')
+var $profilephoto = document.querySelector('#profilephoto')
+var $profilePagePic = document.querySelector('#profilePagePic')
 
 const errorFormatter = (e)=>{
 
@@ -166,6 +174,7 @@ if($getProfileButton){
     $getProfileButton.addEventListener('submit',(e)=>{
         
         e.preventDefault()
+        
 
         $profileDiv.style.display = "block"
         $writeTweetDiv.style.display = "none"
@@ -174,6 +183,7 @@ if($getProfileButton){
         $changeNameDiv.style.display = "none"
         $changeUsernameDiv.style.display = "none"
         $changeBioDiv.style.display = "none"
+        $uploadProfilepicDiv.style.display = "none"
         $timelineDiv.style.display = "none"
         
 
@@ -182,6 +192,7 @@ if($getProfileButton){
         $followingCount.textContent = ''
         $username.textContent = ''
         $bio.textContent = ''
+        $uploadProfilepicResult.textContent = ''
 
         fetch('/users/me',{
             method: 'GET',
@@ -191,6 +202,8 @@ if($getProfileButton){
         })
         .then(response => response.json())
         .then(data => {
+            
+
             console.log('Success:', data)
             
             $name.textContent =  'Name: ' + data.name
@@ -202,13 +215,30 @@ if($getProfileButton){
                 $bio.textContent = 'Bio: ' + data.bio
             }
 
-            
+            fetch('/users/' + data.username + '/profilepic',{
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            })
+            .then(response => {
+                return response.blob()
+            })
+            .then(data => {
+                if(data){
+                    console.log(data)
+                    $profilephoto.src = URL.createObjectURL(data)
+                }
+            })
              
          })
         .catch((error) => {
              console.error('Error:', error)
              
         })
+
+
+
     })
 }
 
@@ -221,6 +251,7 @@ if($changePassButton){
         $changeUsernameDiv.style.display = "none"
         $changeBioDiv.style.display = "none"
         $timelineDiv.style.display = "none"
+        $uploadProfilepicDiv.style.display = "none"
     })
 }
 if($changeNameButton){
@@ -232,6 +263,7 @@ if($changeNameButton){
         $changeUsernameDiv.style.display = "none"
         $changeBioDiv.style.display = "none"
         $timelineDiv.style.display = "none"
+        $uploadProfilepicDiv.style.display = "none"
     })
 }
 if($changeUsernameButton){
@@ -243,6 +275,7 @@ if($changeUsernameButton){
         $changeUsernameDiv.style.display = "block"
         $changeBioDiv.style.display = "none"
         $timelineDiv.style.display = "none"
+        $uploadProfilepicDiv.style.display = "none"
     })
 }
 if($changeBioButton){
@@ -254,8 +287,23 @@ if($changeBioButton){
         $changeUsernameDiv.style.display = "none"
         $changeBioDiv.style.display = "block"
         $timelineDiv.style.display = "none"
+        $uploadProfilepicDiv.style.display = "none"
     })
 }
+
+if($uploadProfilepicButton){
+    $uploadProfilepicButton.addEventListener('submit',(e)=>{
+        e.preventDefault()
+
+        $changePassDiv.style.display = "none"
+        $changeNameDiv.style.display = "none"
+        $changeUsernameDiv.style.display = "none"
+        $changeBioDiv.style.display = "none"
+        $timelineDiv.style.display = "none"
+        $uploadProfilepicDiv.style.display = "block"
+    })
+}
+
 
 if($changePassForm){
     $changePassForm.addEventListener('submit',(e)=>{
@@ -392,6 +440,43 @@ if($changeBioForm){
         .catch((error) => {
           console.error('Error:', error)
           $changeBioResult.textContent = 'cant change bio'
+        })
+    })
+}
+if($uploadProfilepicForm){
+    $uploadProfilepicForm.addEventListener('submit',(e)=>{
+        e.preventDefault()
+
+        $uploadProfilepicResult.textContent = ''
+
+        
+        var data = new FormData()
+        const profilepic = $imgInput.files[0]
+        
+        data.append('profilepic',profilepic)
+        
+
+        fetch('/users/me/profilepic',{
+            method: 'POST',
+            body: data,
+    
+        })
+        .then(response => {
+            if(response.ok){
+                response.json()
+            }
+            else{
+                throw new error()
+            }
+            
+        })
+        .then(data => {
+          console.log('Success:', data)
+          $uploadProfilepicResult.textContent = 'profile picture uploaded successfully'
+        })
+        .catch((error) => {
+          console.error('Error:', error)
+          $uploadProfilepicResult.textContent = 'sorry, cant upload this file(its too large or not supported format)'
         })
     })
 }
@@ -631,4 +716,22 @@ if($unfollowButton){
         })
 
 })
+}
+
+if($profilePagePic){
+    fetch('/users/' + $profilePagePic.className + '/profilepic',{
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+    })
+    .then(response => {
+        return response.blob()
+    })
+    .then(data => {
+        if(data){
+            
+            $profilePagePic.src = URL.createObjectURL(data)
+        }
+    })
 }
